@@ -1,26 +1,19 @@
-Checks: "*,
-        readability-identifier-naming,
-        -abseil-*,
-        -altera-*,
-        -android-*,
-        -fuchsia-*,
-        -google-*,
-        -llvm*,
-        -modernize-use-trailing-return-type,
-        -zircon-*,
-        -readability-else-after-return,
-        -readability-static-accessed-through-instance,
-        -readability-avoid-const-params-in-decls,
-        -readability-magic-numbers,
-        -cppcoreguidelines-avoid-magic-numbers,
-        -cppcoreguidelines-non-private-member-variables-in-classes,
-        -misc-non-private-member-variables-in-classes,
-        -modernize-use-using,
+Checks: "
+    performance-*,
+    misc-*,
+    android-cloexec-*,
+    readability-*,
+    bugprone-*,
+    -bugprone-easily-swappable-parameters,
+    -clang-analyzer-security.insecureAPI.*,
+    -misc-no-recursion,
 "
 CheckOptions:
   - key:    readability-identifier-naming.VariableCase
-    value:  camelBack
+    value:  lower_case
+  - key:    bugprone-assert-side-effect.AssertMacros
+    value:  'ASSERT'
 
-WarningsAsErrors: ''
+WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 FormatStyle:     none

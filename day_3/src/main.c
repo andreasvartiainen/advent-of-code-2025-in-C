@@ -6,6 +6,8 @@
 
 // #define FILENAME "joltake-example.input"
 #define FILENAME "joltake.input"
+#define BUF_SIZE 256
+#define BASE 10
 
 int i_from_c(const char num) {
 	return num - '0';
@@ -13,7 +15,7 @@ int i_from_c(const char num) {
 
 int value_from_string(const char *str) {
 	int value = {};
-	value = (int)strtol(str, nullptr, 10);
+	value = (int)strtol(str, nullptr, BASE);
 	return value;
 }
 
@@ -41,7 +43,8 @@ int calculate_joltage(const char *line) {
 
 	int return_val = 0;
 	return_val = i_from_c(line[max_index]);
-	return_val *= 10;
+	const int ten_div = 10;
+	return_val *= ten_div;
 	return_val += i_from_c(line[max_index2]);
 
 	return return_val;
@@ -54,16 +57,15 @@ void strip_newline(char *line) {
 }
 
 int main() {
-	FILE *file = fopen(FILENAME, "r");
+	FILE *file = fopen(FILENAME, "re");
 	if (file == nullptr) {
 		return fprintf(stderr, "ERROR: when opening the file %s for reading\n", FILENAME); 
 	}
 
 	int sum = 0;
-	const int buf_size = 256;
 	while (!feof(file)) {
-		char buf[buf_size] = {};
-		if(!fgets(buf, buf_size, file)) {
+		char buf[BUF_SIZE] = {};
+		if(!fgets(buf, BUF_SIZE, file)) {
 			break;
 		}
 		strip_newline(buf);
