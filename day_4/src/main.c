@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // #define FILENAME "rolls-example.input"
 #define FILENAME "rolls.input"
@@ -112,6 +113,8 @@ int main() {
 		return fprintf(stderr, "ERROR: when opening the file %s for reading\n", FILENAME); 
 	}
 
+	clock_t start = clock();
+
 	char lines[LINES][BUF_SIZE] = {{'\0'}};
 
 	int line_count = 0;
@@ -134,6 +137,8 @@ int main() {
 		update_rolls(lines, line_count);
 		// print_rolls(lines, line_count);
 	}
+
+	printf("time elapsed: %f\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 
 	printf("removed: %d\n", removed);
 
