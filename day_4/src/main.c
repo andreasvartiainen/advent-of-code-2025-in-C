@@ -30,6 +30,10 @@ int count_adjacent(
 		) {
 	int adj_count = 0;
 	for (int k = -1; k <= 1; k++) {
+		if (row + k >= lines || row + k < 0) {
+			// printf("-");
+			continue;
+		}
 		for (int kk = -1; kk <= 1; kk++) {
 			// if we are at the center (same index as the source, skip
 			if (k == 0 && kk == 0) {
@@ -41,10 +45,6 @@ int count_adjacent(
 			// if row + k is less than 0 
 			// means that both ends of list is checked and if one
 			// of them fail we skip this iteration
-			if (row + k >= lines || row + k < 0) {
-				// printf("-");
-				continue;
-			}
 			if (col + kk >= len || col + kk < 0) {
 				// printf("u");
 				continue;
