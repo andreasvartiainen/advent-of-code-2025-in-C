@@ -1,0 +1,5 @@
+.cache/clangd/index
+out/bin
+compile_commands.json
+.idea
+out/Debug
