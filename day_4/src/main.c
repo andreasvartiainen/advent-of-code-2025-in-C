@@ -6,10 +6,10 @@
 
 // #define FILENAME "rolls-example.input"
 #define FILENAME "rolls.input"
-// #define FILENAME "rolls.input"
 #define BUF_SIZE 256
 #define LINES 1000
 #define ROLLSYM '@'
+#define DELETESYM 'X'
 
 void strip_newline(char *line) {
 	if (line[strlen(line) - 1] == '\n') {
@@ -51,7 +51,11 @@ int count_adjacent(
 			}
 			// if the location is roll symbol add one, if not add 0
 			// printf("%c", rolls[row + k][col + kk]);
-			adj_count += (rolls[row + k][col + kk] == ROLLSYM) ? 1 : 0;
+		  if (rolls[row + k][col + kk] == ROLLSYM
+					|| rolls[row + k][col + kk] == DELETESYM
+					) {
+				adj_count++;
+			}
 		}
 		// printf("\n");
 	}
@@ -67,14 +71,39 @@ int handle_rolls(char rolls[LINES][BUF_SIZE], int lines) {
 	for (int row = 0; row < lines; row++) {
 		for (int col = 0; col < len; col++) {
 			// if we are at an item that is not a roll, skippp
-			if (rolls[row][col] == '@') {
+			if (rolls[row][col] == ROLLSYM) {
 				if (count_adjacent(rolls, lines, len, row, col) < 4) {
+					rolls[row][col] = DELETESYM;
 					valid_roll_count++;
 				}
 			}
 		}
 	}
 	return valid_roll_count;
+}
+
+// return the count of all the valid rolls
+void print_rolls(char rolls[LINES][BUF_SIZE], int lines) {
+	int len = (int)strlen(rolls[0]);
+
+	for (int row = 0; row < lines; row++) {
+		for (int col = 0; col < len; col++) {
+			printf("%c", rolls[row][col]);
+		}
+		printf("\n");
+	}
+}
+
+void update_rolls(char rolls[LINES][BUF_SIZE], int lines) {
+	int len = (int)strlen(rolls[0]);
+
+	for (int row = 0; row < lines; row++) {
+		for (int col = 0; col < len; col++) {
+			if (rolls[row][col] == DELETESYM) {
+				rolls[row][col] = '.';
+			}
+		}
+	}
 }
 
 int main() {
@@ -96,7 +125,17 @@ int main() {
 		line_count++;
 	}
 
-	printf("valid rolls: %d\n", handle_rolls(lines, line_count));
+	// print_rolls(lines, line_count);
+	int removed = 0;
+	int to_be_removed = INT32_MAX;
+	while (to_be_removed > 0) {
+		to_be_removed = handle_rolls(lines, line_count);
+    removed += to_be_removed;
+		update_rolls(lines, line_count);
+		// print_rolls(lines, line_count);
+	}
+
+	printf("removed: %d\n", removed);
 
 	if (fclose(file) == EOF) {
 		return fprintf(stderr, "ERROR: when closing the file %s\n", FILENAME); 
