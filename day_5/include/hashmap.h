@@ -3,8 +3,9 @@
 
 // #define BUCKET_SIZE 1 << 10
 #include <stdint.h>
-#define BUCKET_SIZE (1 << 16)
-#define VALUES (1 << 15)
+#include <stdio.h>
+#define BUCKET_SIZE (1 << 10)
+#define MULT 49
 
 typedef struct hashmap_t {
 	int64_t value;
@@ -22,6 +23,7 @@ static inline void hashmap_init() {
 
 static inline int hash_function(int64_t value) {
 	int key = (int)(value % BUCKET_SIZE);
+	key = (key * MULT) % BUCKET_SIZE;
 	return key;
 }
 
@@ -36,6 +38,7 @@ static inline void hashmap_insert(const int64_t value) {
 		}
 		hash++;
 	}
+	printf("hashmap full\n");
 }
 
 static inline int64_t hashmap_count_items() {

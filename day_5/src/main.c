@@ -7,8 +7,8 @@
 // evidently this was not the solution
 #include "hashmap.h"
 
-#define FILENAME "cafeteria-example.input"
-// #define FILENAME "cafeteria.input"
+// #define FILENAME "cafeteria-example.input"
+#define FILENAME "cafeteria.input"
 #define BUF_SIZE 256
 #define LINES 2000
 
@@ -33,13 +33,6 @@ range_t create_ranges(char *line) {
 	}
 
 	sscanf(line, "%ld-%ld", &range.start, &range.end);
-	for (int64_t i = range.start; i <= range.end; i++) {
-		// if the key doesn't exist, we add it
-		// otherwise skip
-		if (hashmap_get(i) == -1) {
-			hashmap_insert(i);
-		}
-	}
 
 	return range;
 }
@@ -55,6 +48,13 @@ bool check_ranges(const range_t *ranges, const int64_t value) {
 	}
 	// printf("SPOILED: %d\n", value);
 	return false;
+}
+
+int sort_func(const void *left, const void *right) {
+	const range_t *rleft = (const range_t*)left;
+	const range_t *rright = (const range_t*)right;
+	
+	return (rleft->start > rright->start) - (rleft->start < rright->start);
 }
 
 int main() {
@@ -78,11 +78,13 @@ int main() {
 		ranges[line_count++] = create_ranges(buf);
 	}
 
-	line_count = 0;
+	qsort(ranges, line_count, sizeof(range_t), sort_func);
+
+	int line_count2 = 0;
 	int fresh = 0;
 	while (!feof(file)) {
 		char buf[BUF_SIZE] = {'\0'};
-		if (!fgets(buf, BUF_SIZE, file) || line_count >= LINES) {
+		if (!fgets(buf, BUF_SIZE, file) || line_count2 >= LINES) {
 			break;
 		}
 		if (buf[0] == '\n') {
@@ -91,17 +93,27 @@ int main() {
 		int64_t value = 0;
 		sscanf(buf, "%ld", &value);
 		fresh += (int)(check_ranges(ranges, value)) ? 1 : 0;
-		line_count++;
+		line_count2++;
 	}
 
 	printf("total fresh: %d\n", fresh);
-	printf("total IDs: %ld\n", hashmap_count_items());
 
-	int index = 0;
-	while (ranges[index].end != -1) {
-		// printf("start: %d end: %d\n", ranges[index].start, ranges[index].end);
-		index++;
+	// 3-5
+	// 10-14
+	// 12-18
+	// 16-20
+	//
+	int64_t ids = 0;
+	for (int i = 0; i < line_count - 1; i++) {
+		if (ranges[i].end >= ranges[i+1].start) {
+			ranges[i].end = ranges[i+1].start;
+		}
+		// plus 2 because we have included the 3-5 start and end
+		ids += ranges[i].end - ranges[i].start + 2;
 	}
+
+	printf("ids: %ld\n", ids);
+
 
 	if (fclose(file) == EOF) {
 		return fprintf(stderr, "ERROR: when closing the file %s\n", FILENAME); 
