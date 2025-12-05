@@ -1,14 +1,14 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "helpers.h"
+// evidently this was not the solution
+#include "hashmap.h"
 
-// #define FILENAME "cafeteria-example.input"
-#define FILENAME "cafeteria.input"
+#define FILENAME "cafeteria-example.input"
+// #define FILENAME "cafeteria.input"
 #define BUF_SIZE 256
 #define LINES 2000
 
@@ -33,6 +33,13 @@ range_t create_ranges(char *line) {
 	}
 
 	sscanf(line, "%ld-%ld", &range.start, &range.end);
+	for (int64_t i = range.start; i <= range.end; i++) {
+		// if the key doesn't exist, we add it
+		// otherwise skip
+		if (hashmap_get(i) == -1) {
+			hashmap_insert(i);
+		}
+	}
 
 	return range;
 }
@@ -88,6 +95,7 @@ int main() {
 	}
 
 	printf("total fresh: %d\n", fresh);
+	printf("total IDs: %ld\n", hashmap_count_items());
 
 	int index = 0;
 	while (ranges[index].end != -1) {
