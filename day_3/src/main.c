@@ -9,6 +9,9 @@
 #define BUF_SIZE 256
 #define BASE 10
 
+// own defer macro for making defer a bit cleaner
+#define defer(X) __attribute__((__cleanup__(X)))
+
 int i_from_c(const char num) { return num - '0'; }
 
 int value_from_string(const char *str) {
@@ -23,7 +26,7 @@ int64_t calculate_joltage(const char *line, int battery_count) {
   int len = (int)strlen(line);
   // { 3 (>3) (>4) (>5) ... (>n) }
   // battery_index saves the indexes of the batteries
-  int *battery_index __attribute__((__cleanup__(free_bbuf))) =
+  int *battery_index defer(free_bbuf) =
       (int *)malloc(sizeof(int) * battery_count);
   for (int i = 0; i < battery_count; i++) {
     battery_index[i] = 0;
