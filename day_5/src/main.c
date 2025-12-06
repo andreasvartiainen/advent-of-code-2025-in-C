@@ -104,6 +104,7 @@ int main() {
 	// 16-20
 	//
 	int64_t ids = 0;
+	// I think this is completely wrong
 	for (int i = 0; i < line_count - 1; i++) {
 		if (ranges[i].end >= ranges[i+1].start) {
 			ranges[i].end = ranges[i+1].start;
