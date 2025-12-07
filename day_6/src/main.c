@@ -49,7 +49,7 @@ void bucket_init(bucket_t *bucket) {
 	memset((void*)bucket->array, 0, bucket->capacity * sizeof(node_t*));
 }
 
-char node_calculate(node_t *node, int64_t *result) {
+char nodes_calculate(node_t *node, int64_t *result) {
 	if (node->next == nullptr) {
 		assert(node->type == CHAR);
 		if (node->symbol == '*') {
@@ -57,7 +57,7 @@ char node_calculate(node_t *node, int64_t *result) {
 		}
 		return node->symbol;
 	}
-	char symbol = node_calculate(node->next, result);
+	char symbol = nodes_calculate(node->next, result);
 	assert(node->type == INT);
 	switch (symbol) {
 		case '+': 
@@ -125,11 +125,11 @@ void bucket_insert(bucket_t *bucket, const void *value, type_t type, uint64_t in
 	}
 }
 
-void get_values(bucket_t *bucket, char *line) {
+void parse_input(bucket_t *bucket, char *line) {
 	uint64_t len = strlen(line);
 	char buf[BUF_SIZE] = {0};
 
-	int columns = 0;
+	uint64_t columns = 0;
 	for (uint64_t i = 0; i < len; i++) {
 		if (line[i] == ' ') {
 			while(line[i++] == ' ') { // ignore spaces 
@@ -183,7 +183,7 @@ int main() {
 			break;
 		}
 		// printf("%s\n", strip_newline(buf));
-		get_values(&bucket, strip_newline(buf));
+		parse_input(&bucket, strip_newline(buf));
 	}
 	
 	printf("size of bucket: %ld\n", bucket.size);
@@ -195,7 +195,7 @@ int main() {
 		// printf("result: %ld\n", result);
 		// total += result;
 		
-		node_calculate(bucket.array[i], &result);
+		nodes_calculate(bucket.array[i], &result);
 		total += result;
 	}
 
