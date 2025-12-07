@@ -8,7 +8,7 @@ enable_testing()
 set(CMAKE_C_STANDARD 23)
 # add warnings as errors -Werror not in this because it causes catch2 to fail
 # use CMakeSelectBuildType to build debug/release
-add_compile_options(-Wall -Wextra -Wpedantic -Wreorder -Wunused -Wshadow -Werror=return-type)
+add_compile_options(-Wall -Wextra -Wconversion -Wpedantic -Wreorder -Wunused -Wshadow -Werror=return-type)
 
 # ---------- how to add libraries -------------
 

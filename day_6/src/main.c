@@ -189,10 +189,13 @@ int main() {
 	printf("size of bucket: %ld\n", bucket.size);
 	int64_t total = 0;
 	for (uint64_t i = 0; i < bucket.size - 1; i++) { // numbers in bucket is one less than size
-																									 // last section is reserved for symbols
 		int64_t result = 0;
+
 		// printf("symbol: %c\n", node_calculate(bucket.array[i], &result));
 		// printf("result: %ld\n", result);
+		// total += result;
+		
+		node_calculate(bucket.array[i], &result);
 		total += result;
 	}
 
