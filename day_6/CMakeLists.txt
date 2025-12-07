@@ -35,12 +35,14 @@ file(GLOB_RECURSE SOURCES "src/*.c")
 
 # remove main.cpp because that causes problems in the unit tests
 list(FILTER SOURCES EXCLUDE REGEX "main.c" )
+list(FILTER SOURCES EXCLUDE REGEX "main_part_2.c" )
 
 set(INCLUDE_DIRS
 	${CMAKE_SOURCE_DIR}/include
 )
 
 add_executable(${PROJECT_NAME} src/main.c ${SOURCES})
+add_executable(part2 src/main_part_2.c ${SOURCES})
 # target for add_test()
 add_executable(tests tests/test.c ${SOURCES})
 # target_link_libraries(${PROJECT_NAME} raylib sqlite3)
